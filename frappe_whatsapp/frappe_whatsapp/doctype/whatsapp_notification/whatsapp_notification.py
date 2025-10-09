@@ -8,7 +8,7 @@ from frappe.model.document import Document
 from frappe.utils.safe_exec import get_safe_globals, safe_exec
 from frappe.integrations.utils import make_post_request
 from frappe.desk.form.utils import get_pdf_link
-from frappe.utils import add_to_date, nowdate, datetime
+from frappe.utils import add_to_date, nowdate, datetime, cast
 
 
 class WhatsAppNotification(Document):
@@ -39,6 +39,9 @@ class WhatsAppNotification(Document):
                     self.set_property_after_alert,
                     self.reference_doctype,
                 ))
+        
+        if self.doctype_event == "Value Change" and not self.value_changed:
+            frappe.throw(_("Please specify which value field must be checked"))
 
 
     def send_scheduled_message(self) -> dict:
@@ -354,4 +357,37 @@ def trigger_notifications(method="daily"):
         for d in doc_list:
             alert = frappe.get_doc("WhatsApp Notification", d.name)
             alert.get_documents_for_today()
+
+def whatsapp_evaluate_alert(doc: Document, alert, event):
+    try:
+        if isinstance(alert, str):
+            alert = frappe.get_doc("WhatsApp Notification", alert)		
+
+        if event == "Value Change" and not doc.is_new():            
+            if not frappe.db.has_column(doc.doctype, alert.value_changed):
+                alert.db_set("disabled", 1)
+                alert.log_error(f"WhatsApp Notification {alert.name} has been disabled due to missing field")
+                return
+
+            doc_before_save = doc.get_doc_before_save()
+            field_value_before_save = doc_before_save.get(alert.value_changed) if doc_before_save else None
+
+            fieldtype = doc.meta.get_field(alert.value_changed).fieldtype
+            if cast(fieldtype, doc.get(alert.value_changed)) == cast(fieldtype, field_value_before_save):
+                # value not changed
+                return
+
+        if event != "Value Change" and not doc.is_new():
+            # reload the doc for the latest values & comments,
+            # except for validate type event.
+            doc.reload()
+        alert.send_template_message(doc)
+    
+    except Exception as e:
+        title = str(e)
+        message = frappe.get_traceback()
+        frappe.log_error(message=message, title=title)
+
+        msg = f"<details><summary>{title}</summary>{message}</details>"
+        frappe.throw(msg, title=_("Error in Notification"))
            
