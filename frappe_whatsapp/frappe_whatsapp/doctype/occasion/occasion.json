@@ -10,14 +10,17 @@
   "column_break_iwrm",
   "title",
   "timeline_section",
-  "from",
   "column_break_ewkq",
-  "to",
+  "image",
+  "column_break_cdwa",
+  "date",
+  "column_break_mcbq",
+  "language",
+  "qr_code",
   "location_section",
   "map_link",
   "column_break_cjwv",
   "location_name",
-  "location_address",
   "section_break_jnzx",
   "participants",
   "templates_section",
@@ -40,21 +43,11 @@
   {
    "fieldname": "timeline_section",
    "fieldtype": "Section Break",
-   "label": "Timeline"
-  },
-  {
-   "fieldname": "from",
-   "fieldtype": "Datetime",
-   "label": "From"
+   "label": "Event Details"
   },
   {
    "fieldname": "column_break_ewkq",
    "fieldtype": "Column Break"
-  },
-  {
-   "fieldname": "to",
-   "fieldtype": "Datetime",
-   "label": "To"
   },
   {
    "fieldname": "location_section",
@@ -92,8 +85,7 @@
    "fieldtype": "Link",
    "in_list_view": 1,
    "label": "Invite Template",
-   "options": "WhatsApp Templates",
-   "reqd": 1
+   "options": "WhatsApp Templates"
   },
   {
    "fieldname": "column_break_vggy",
@@ -132,17 +124,45 @@
    "bold": 1,
    "fieldname": "title",
    "fieldtype": "Data",
-   "label": "Title"
+   "label": "Title",
+   "reqd": 1
   },
   {
    "fieldname": "location_name",
    "fieldtype": "Data",
-   "label": "Location Name"
+   "label": "Location Name",
+   "reqd": 1
   },
   {
-   "fieldname": "location_address",
+   "fieldname": "image",
+   "fieldtype": "Attach Image",
+   "label": "Image"
+  },
+  {
+   "fieldname": "column_break_cdwa",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Datetime",
+   "label": "Date",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_mcbq",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "language",
    "fieldtype": "Data",
-   "label": "Location Address"
+   "label": "Language",
+   "reqd": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "qr_code",
+   "fieldtype": "Check",
+   "label": "Show QR code in the invitation"
   }
  ],
  "grid_page_length": 50,
@@ -174,9 +194,9 @@
    "link_fieldname": "occasion"
   }
  ],
- "modified": "2025-08-31 13:54:31.350606",
+ "modified": "2025-10-12 14:12:05.542677",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "Occasion",
  "naming_rule": "Expression",
  "owner": "Administrator",
