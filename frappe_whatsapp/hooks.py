@@ -217,11 +217,4 @@ doc_events = {
         "before_update_after_submit": "frappe_whatsapp.utils.run_server_script_for_doc_event",
         "on_update_after_submit": "frappe_whatsapp.utils.run_server_script_for_doc_event"
     },
-    "Sales Order" : {
-        "validate" : "frappe_whatsapp.hooks_call.get_customer_mobile_no"
-    },
-    "Sales Invoice" : {
-        "validate" : "frappe_whatsapp.hooks_call.get_customer_mobile_no"
-    },
-   
 }

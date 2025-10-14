@@ -47,7 +47,6 @@ def run_notifications(self, method):
             event_map["on_change"] = "Value Change"
 
         for alert in self.flags.wa_notifications:
-            frappe.log_error("test notification from whatsapp2" )
             event = event_map.get(method, None)
             if event and alert.doctype_event == event:
                 _evaluate_alert(alert)

@@ -9,6 +9,8 @@ from frappe.utils.safe_exec import get_safe_globals, safe_exec
 from frappe.integrations.utils import make_post_request
 from frappe.desk.form.utils import get_pdf_link
 from frappe.utils import add_to_date, nowdate, datetime, cast
+from frappe_whatsapp.utils.document_utils import get_value_from_childtable
+import re
 
 
 class WhatsAppNotification(Document):
@@ -128,21 +130,32 @@ class WhatsAppNotification(Document):
             # Pass parameter values
             if self.fields:
                 parameters = []
-                for field in self.fields:
-                    if isinstance(doc, Document):
-                        # get field with prettier value.
-                        value = doc.get_formatted(field.field_name)
-                    else: 
-                        value = doc_data[field.field_name]
-                        if isinstance(doc_data[field.field_name], (datetime.date, datetime.datetime)):
-                            value = str(doc_data[field.field_name])
 
+                for field in self.fields:
+                    fieldname = field.field_name
+                    value = None
+
+                    if isinstance(doc, Document):
+                        if re.search(r'\[\d+\]\.', fieldname):
+                            value = get_value_from_childtable(doc, fieldname)
+                        else:
+                            value = doc.get_formatted(fieldname)
+                    else:
+                        if re.search(r'\[\d+\]\.', fieldname):
+                            value = get_value_from_childtable(doc_data, fieldname)
+                        else:
+                            value = doc_data.get(fieldname)
+
+                        if isinstance(value, (datetime.date, datetime.datetime)):
+                            value = str(value)
+
+                    frappe.log_error(title="parameter value", message=str(value))
                     parameters.append({
                         "type": "text",
-                        "text": value
+                        "text": value or ""
                     })
 
-                data['template']["components"] = [{
+                data["template"]["components"] = [{
                     "type": "body",
                     "parameters": parameters
                 }]
