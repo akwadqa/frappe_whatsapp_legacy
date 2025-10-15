@@ -1,165 +1,203 @@
 {
-  "actions": [],
-  "autoname": "field:list_name",
-  "creation": "2023-05-10 12:00:00",
-  "doctype": "DocType",
-  "editable_grid": 1,
-  "engine": "InnoDB",
-  "field_order": [
-    "list_name",
-    "description",
-    "section_recipients",
-    "recipients",
-    "import_section",
-    "import_from_doctype",
-    "doctype_to_import",
-    "customer_id_field",
-    "mobile_field",
-    "name_field",
-    "import_filters",
-    "data_fields",
-    "import_limit",
-    "import_button"
-  ],
-  "fields": [
-    {
-      "fieldname": "list_name",
-      "fieldtype": "Data",
-      "in_list_view": 1,
-      "label": "List Name",
-      "reqd": 1,
-      "unique": 1
-    },
-    {
-      "fieldname": "description",
-      "fieldtype": "Small Text",
-      "label": "Description"
-    },
-    {
-      "fieldname": "section_recipients",
-      "fieldtype": "Section Break",
-      "label": "Recipients"
-    },
-    {
-      "fieldname": "recipients",
-      "fieldtype": "Table",
-      "label": "Recipients",
-      "options": "WhatsApp Recipient"
-    },
-    {
-      "fieldname": "import_section",
-      "fieldtype": "Section Break",
-      "hidden": 1,
-      "label": "Import Recipients"
-    },
-    {
-      "default": "0",
-      "fieldname": "import_from_doctype",
-      "fieldtype": "Check",
-      "label": "Import From Customer DocType"
-    },
-    {
-      "default": "Customer",
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "fieldname": "doctype_to_import",
-      "fieldtype": "Link",
-      "hidden": 1,
-      "label": "DocType to Import",
-      "options": "DocType"
-    },
-    {
-      "default": "custom_mobile_no",
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "description": "Field name containing the mobile number",
-      "fieldname": "mobile_field",
-      "fieldtype": "Data",
-      "hidden": 1,
-      "label": "Mobile Number Field"
-    },
-    {
-      "default": "customer_name",
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "description": "Field name containing the recipient name (optional)",
-      "fieldname": "name_field",
-      "fieldtype": "Data",
-      "hidden": 1,
-      "label": "Customer Name Field"
-    },
-    {
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "description": "JSON filters to apply when importing (optional) Ex: {\"email\": \"admin@example.com\"}",
-      "fieldname": "import_filters",
-      "fieldtype": "Code",
-      "label": "Filters",
-      "options": "JSON"
-    },
-    {
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "description": "Maximum number of records to import (optional)",
-      "fieldname": "import_limit",
-      "fieldtype": "Int",
-      "label": "Import Limit"
-    },
-    {
-      "depends_on": "eval:doc.import_from_doctype==1 && doc.doctype_to_import && doc.mobile_field",
-      "description": "Save form before importing",
-      "fieldname": "import_button",
-      "fieldtype": "Button",
-      "label": "Import Recipients"
-    },
-    {
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "description": "JSON fields to apply when importing (optional) [\"full_name\", \"email\"]",
-      "fieldname": "data_fields",
-      "fieldtype": "Code",
-      "hidden": 1,
-      "label": "Data fields",
-      "options": "JSON"
-    },
-    {
-      "default": "name",
-      "depends_on": "eval:doc.import_from_doctype==1",
-      "fieldname": "customer_id_field",
-      "fieldtype": "Data",
-      "hidden": 1,
-      "label": "Customer ID Field"
-    }
-  ],
-  "index_web_pages_for_search": 1,
-  "links": [],
-  "modified": "2025-10-15 11:16:22.255512",
-  "modified_by": "Administrator",
-  "module": "Frappe Whatsapp",
-  "name": "WhatsApp Recipient List",
-  "naming_rule": "By fieldname",
-  "owner": "Administrator",
-  "permissions": [
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "System Manager",
-      "share": 1,
-      "write": 1
-    },
-    {
-      "create": 1,
-      "delete": 1,
-      "email": 1,
-      "export": 1,
-      "print": 1,
-      "read": 1,
-      "report": 1,
-      "role": "WhatsApp Manager",
-      "share": 1,
-      "write": 1
-    }
-  ],
-  "sort_field": "modified",
-  "sort_order": "DESC",
-  "states": []
+ "actions": [],
+ "autoname": "field:list_name",
+ "creation": "2023-05-10 12:00:00",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "list_name",
+  "description",
+  "section_recipients",
+  "recipients",
+  "import_section",
+  "import_from_doctype",
+  "doctype_to_import",
+  "customer_id_field",
+  "mobile_field",
+  "name_field",
+  "import_filters",
+  "data_fields",
+  "import_limit",
+  "import_button",
+  "import_recipients_section",
+  "select_recipients_type",
+  "days_since_last_order",
+  "registered_in_the_last_days",
+  "import_recipient_button"
+ ],
+ "fields": [
+  {
+   "fieldname": "list_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "List Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "description",
+   "fieldtype": "Small Text",
+   "label": "Description"
+  },
+  {
+   "fieldname": "section_recipients",
+   "fieldtype": "Section Break",
+   "label": "Recipients"
+  },
+  {
+   "fieldname": "recipients",
+   "fieldtype": "Table",
+   "label": "Recipients",
+   "options": "WhatsApp Recipient",
+   "reqd": 1
+  },
+  {
+   "fieldname": "import_section",
+   "fieldtype": "Section Break",
+   "hidden": 1,
+   "label": "Import Recipients"
+  },
+  {
+   "default": "0",
+   "fieldname": "import_from_doctype",
+   "fieldtype": "Check",
+   "label": "Import From Customer DocType"
+  },
+  {
+   "default": "Customer",
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "fieldname": "doctype_to_import",
+   "fieldtype": "Link",
+   "hidden": 1,
+   "label": "DocType to Import",
+   "options": "DocType"
+  },
+  {
+   "default": "custom_mobile_no",
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "description": "Field name containing the mobile number",
+   "fieldname": "mobile_field",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Mobile Number Field"
+  },
+  {
+   "default": "customer_name",
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "description": "Field name containing the recipient name (optional)",
+   "fieldname": "name_field",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Customer Name Field"
+  },
+  {
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "description": "JSON filters to apply when importing (optional) Ex: {\"email\": \"admin@example.com\"}",
+   "fieldname": "import_filters",
+   "fieldtype": "Code",
+   "label": "Filters",
+   "options": "JSON"
+  },
+  {
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "description": "Maximum number of records to import (optional)",
+   "fieldname": "import_limit",
+   "fieldtype": "Int",
+   "label": "Import Limit"
+  },
+  {
+   "depends_on": "eval:doc.import_from_doctype==1 && doc.doctype_to_import && doc.mobile_field",
+   "description": "Save form before importing",
+   "fieldname": "import_button",
+   "fieldtype": "Button",
+   "label": "Import Recipients"
+  },
+  {
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "description": "JSON fields to apply when importing (optional) [\"full_name\", \"email\"]",
+   "fieldname": "data_fields",
+   "fieldtype": "Code",
+   "hidden": 1,
+   "label": "Data fields",
+   "options": "JSON"
+  },
+  {
+   "default": "name",
+   "depends_on": "eval:doc.import_from_doctype==1",
+   "fieldname": "customer_id_field",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "Customer ID Field"
+  },
+  {
+   "fieldname": "import_recipients_section",
+   "fieldtype": "Section Break",
+   "label": "Import Recipients"
+  },
+  {
+   "fieldname": "select_recipients_type",
+   "fieldtype": "Select",
+   "label": "Select Recipients Type",
+   "options": "Inactive Customers\nRecently Registered Customers\nCustomers Without Transactions"
+  },
+  {
+   "depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\"",
+   "fieldname": "days_since_last_order",
+   "fieldtype": "Int",
+   "label": "Days Since Last Order",
+   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\"",
+   "non_negative": 1
+  },
+  {
+   "depends_on": "eval: doc.select_recipients_type == \"Recently Registered Customers\"",
+   "fieldname": "registered_in_the_last_days",
+   "fieldtype": "Int",
+   "label": "Registered in the Last (Days)",
+   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Recently Registered Customers\"",
+   "non_negative": 1
+  },
+  {
+   "fieldname": "import_recipient_button",
+   "fieldtype": "Button",
+   "label": "Import Recipients"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2025-10-15 13:43:47.415971",
+ "modified_by": "Administrator",
+ "module": "Frappe Whatsapp",
+ "name": "WhatsApp Recipient List",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "WhatsApp Manager",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
 }
