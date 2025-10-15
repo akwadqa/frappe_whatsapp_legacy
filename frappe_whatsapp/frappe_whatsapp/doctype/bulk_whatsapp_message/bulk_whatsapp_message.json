@@ -44,9 +44,10 @@
    "label": "Recipients"
   },
   {
-   "default": "Individual",
+   "default": "Recipient List",
    "fieldname": "recipient_type",
    "fieldtype": "Select",
+   "hidden": 1,
    "label": "Recipient Type",
    "options": "\nIndividual\nRecipient List"
   },
@@ -137,7 +138,7 @@
  "index_web_pages_for_search": 1,
  "is_submittable": 1,
  "links": [],
- "modified": "2025-03-03 11:28:42.295568",
+ "modified": "2025-10-14 14:36:45.760017",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "Bulk WhatsApp Message",

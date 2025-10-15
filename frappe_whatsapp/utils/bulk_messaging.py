@@ -17,7 +17,7 @@ def retry_failed(name):
     return True
 
 @frappe.whitelist()
-def import_recipients(list_name, doctype, mobile_field, name_field=None, filters=None, limit=None, data_fields=None):
+def import_recipients(list_name, doctype, mobile_field, customer, name_field=None, filters=None, limit=None, data_fields=None):
     """Import recipients from a DocType"""
     if filters and isinstance(filters, str):
         filters = json.loads(filters)
@@ -26,7 +26,7 @@ def import_recipients(list_name, doctype, mobile_field, name_field=None, filters
         data_fields = json.loads(data_fields)
         
     doc = frappe.get_doc("WhatsApp Recipient List", list_name)
-    count = doc.import_list_from_doctype(doctype, mobile_field, name_field, filters, limit, data_fields)
+    count = doc.import_list_from_doctype(doctype, mobile_field, customer, name_field, filters, limit, data_fields)
     doc.save()
     
     return count
