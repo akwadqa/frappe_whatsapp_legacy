@@ -9,16 +9,16 @@
  "field_order": [
   "invitee_details_tab",
   "contact_info_section",
-  "invitee",
   "column_break_zgpq",
+  "first_name",
+  "last_name",
   "full_name",
   "whatsapp_number",
   "occasion_details_section",
   "occasion",
-  "occasion_name",
   "qr_code",
   "column_break_yntq",
-  "party_size",
+  "additional_guests",
   "hidden_fields_section",
   "ticket_id",
   "qr_raw_data",
@@ -32,14 +32,6 @@
   "last_checkin"
  ],
  "fields": [
-  {
-   "fieldname": "invitee",
-   "fieldtype": "Link",
-   "in_list_view": 1,
-   "in_standard_filter": 1,
-   "label": "Invitee",
-   "options": "Contact"
-  },
   {
    "fieldname": "column_break_zgpq",
    "fieldtype": "Column Break"
@@ -68,7 +60,8 @@
    "in_standard_filter": 1,
    "label": "Occasion",
    "options": "Occasion",
-   "reqd": 1
+   "reqd": 1,
+   "search_index": 1
   },
   {
    "fieldname": "column_break_yntq",
@@ -128,11 +121,6 @@
    "label": "Hidden Section"
   },
   {
-   "fieldname": "party_size",
-   "fieldtype": "Int",
-   "label": "Party Size"
-  },
-  {
    "fieldname": "checkin_details_tab",
    "fieldtype": "Tab Break",
    "label": "Checkin Info"
@@ -159,19 +147,27 @@
    "label": "Last Checkin"
   },
   {
-   "fetch_from": "occasion.title",
-   "fieldname": "occasion_name",
+   "fieldname": "additional_guests",
+   "fieldtype": "Int",
+   "label": "Additional Guest(s)"
+  },
+  {
+   "fieldname": "first_name",
    "fieldtype": "Data",
-   "label": "Occasion Name",
-   "read_only": 1
+   "label": "First Name"
+  },
+  {
+   "fieldname": "last_name",
+   "fieldtype": "Data",
+   "label": "Last Name"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-14 14:19:59.701284",
+ "modified": "2025-10-16 11:37:39.870115",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "Occasion Invitee",
  "naming_rule": "Expression",
  "owner": "Administrator",
