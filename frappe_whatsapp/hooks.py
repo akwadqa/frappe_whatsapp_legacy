@@ -1,11 +1,11 @@
 from . import __version__ as app_version
 
 app_name = "frappe_whatsapp"
-app_title = "Frappe Whatsapp"
-app_publisher = "Shridhar Patil"
-app_description = "WhatsApp integration for frappe"
-app_email = "shridhar.p@zerodha.com"
-app_license = "MIT"
+app_title = "Frappe WhatsApp"
+app_publisher = "Akwad Programming"
+app_description = "Integration of Frappe Framework with WhatsApp Business API"
+app_email = "support@akwad.qa"
+app_license = "mit"
 
 # Includes in <head>
 # ------------------
@@ -65,7 +65,8 @@ app_include_js = "/assets/frappe_whatsapp/js/frappe_whatsapp.js"
 # ------------
 
 # before_install = "frappe_whatsapp.install.before_install"
-# after_install = "frappe_whatsapp.install.after_install"
+after_install = "frappe_whatsapp.setup.after_install"
+before_uninstall = "frappe_whatsapp.setup.before_uninstall"
 
 # Uninstallation
 # ------------
@@ -216,5 +217,5 @@ doc_events = {
         "after_delete": "frappe_whatsapp.utils.run_server_script_for_doc_event",
         "before_update_after_submit": "frappe_whatsapp.utils.run_server_script_for_doc_event",
         "on_update_after_submit": "frappe_whatsapp.utils.run_server_script_for_doc_event"
-    }
+    },
 }
