@@ -1,11 +1,11 @@
 from . import __version__ as app_version
 
 app_name = "frappe_whatsapp"
-app_title = "Frappe Whatsapp"
-app_publisher = "Shridhar Patil"
-app_description = "WhatsApp integration for frappe"
-app_email = "shridhar.p@zerodha.com"
-app_license = "MIT"
+app_title = "Frappe WhatsApp"
+app_publisher = "Akwad Programming"
+app_description = "Integration of Frappe Framework with WhatsApp Business API"
+app_email = "support@akwad.qa"
+app_license = "mit"
 
 # Includes in <head>
 # ------------------

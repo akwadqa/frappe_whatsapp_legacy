@@ -10,6 +10,13 @@ class WhatsAppMessage(Document):
     """Send whats app messages."""
 
     def before_insert(self):
+        try:
+            self.send_message() 
+        except Exception as e:
+            self.status = "Failed"
+            frappe.log_error(title="Failed to send message" , message = str(e)) 
+
+    def send_message(self):
         """Send message."""
         if self.type == "Outgoing" and self.message_type != "Template":
             if self.attach and not self.attach.startswith("http"):
@@ -129,7 +136,7 @@ class WhatsAppMessage(Document):
                 headers=headers,
                 data=json.dumps(data),
             )
-            self.message_id = response["messages"][0]["id"]
+            self.db_set("message_id", response["messages"][0]["id"])
 
         except Exception as e:
             res = frappe.flags.integration_request.json()["error"]

@@ -113,8 +113,7 @@
    "fieldname": "message_type",
    "fieldtype": "Select",
    "label": "Message Type",
-   "options": "Manual\nTemplate",
-   "read_only": 1
+   "options": "Manual\nTemplate"
   },
   {
    "fieldname": "message_id",
@@ -185,15 +184,16 @@
    "label": "bulk_message_reference"
   },
   {
-    "fieldname": "profile_name",
-    "fieldtype": "Data",
-    "label": "Profile Name",
-    "read_only": 1
-   }
+   "fieldname": "profile_name",
+   "fieldtype": "Data",
+   "label": "Profile Name",
+   "read_only": 1
+  }
  ],
+ "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-03-13 12:03:12.896651",
+ "modified": "2025-10-16 16:34:25.429172",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "WhatsApp Message",

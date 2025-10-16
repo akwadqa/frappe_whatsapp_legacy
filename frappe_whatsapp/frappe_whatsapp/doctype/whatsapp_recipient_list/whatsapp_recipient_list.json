@@ -163,9 +163,10 @@
    "label": "Import Recipients"
   }
  ],
+ "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-15 13:43:47.415971",
+ "modified": "2025-10-16 15:18:31.074013",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "WhatsApp Recipient List",
