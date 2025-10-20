@@ -21,6 +21,7 @@
   "import_limit",
   "import_button",
   "import_recipients_section",
+  "import_recipients",
   "select_recipients_type",
   "days_since_last_order",
   "registered_in_the_last_days",
@@ -136,17 +137,18 @@
    "label": "Import Recipients"
   },
   {
+   "depends_on": "eval: doc.import_recipients",
    "fieldname": "select_recipients_type",
    "fieldtype": "Select",
    "label": "Select Recipients Type",
    "options": "Inactive Customers\nRecently Registered Customers\nCustomers Without Transactions"
   },
   {
-   "depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\"",
+   "depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\" && doc.import_recipients",
    "fieldname": "days_since_last_order",
    "fieldtype": "Int",
    "label": "Days Since Last Order",
-   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\"",
+   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\" && doc.import_recipients",
    "non_negative": 1
   },
   {
@@ -154,19 +156,26 @@
    "fieldname": "registered_in_the_last_days",
    "fieldtype": "Int",
    "label": "Registered in the Last (Days)",
-   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Recently Registered Customers\"",
+   "mandatory_depends_on": "eval: doc.select_recipients_type == \"Recently Registered Customers\" && doc.import_recipients",
    "non_negative": 1
   },
   {
+   "depends_on": "eval: doc.import_recipients",
    "fieldname": "import_recipient_button",
    "fieldtype": "Button",
+   "label": "Import Recipients"
+  },
+  {
+   "default": "0",
+   "fieldname": "import_recipients",
+   "fieldtype": "Check",
    "label": "Import Recipients"
   }
  ],
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-16 15:18:31.074013",
+ "modified": "2025-10-19 10:50:10.629708",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "WhatsApp Recipient List",
