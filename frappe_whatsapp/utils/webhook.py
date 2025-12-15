@@ -33,7 +33,7 @@ def post():
     frappe.get_doc({
         "doctype": "WhatsApp Notification Log",
         "template": "Webhook",
-        "meta_data": json.dumps(data)
+        "meta_data": frappe.as_json(data)
     }).insert(ignore_permissions=True)
 
     messages = []
@@ -90,7 +90,7 @@ def post():
                     "content_type": "flow",
                     "profile_name":sender_profile_name
                 }).insert(ignore_permissions=True)
-            elif message_type in ["image", "audio", "video", "document"]:
+            elif message_type in ["image", "sticker", "audio", "video", "document"]:
                 settings = frappe.get_doc(
                             "WhatsApp Settings", "WhatsApp Settings",
                         )

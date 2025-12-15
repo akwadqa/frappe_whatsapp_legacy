@@ -34,10 +34,8 @@
  ],
  "fields": [
   {
-   "allow_in_quick_entry": 1,
    "fieldname": "label",
    "fieldtype": "Data",
-   "in_list_view": 1,
    "label": "Label"
   },
   {
@@ -131,8 +129,10 @@
    "allow_in_quick_entry": 1,
    "fieldname": "content_type",
    "fieldtype": "Select",
+   "in_list_view": 1,
+   "in_standard_filter": 1,
    "label": "Content Type",
-   "options": "text\ndocument\nimage\nvideo\naudio\nflow\nreaction\nlocation\ncontact\nbutton",
+   "options": "text\ndocument\nimage\nvideo\naudio\nflow\nreaction\nlocation\ncontact\nbutton\nsticker",
    "reqd": 1
   },
   {
@@ -193,9 +193,9 @@
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-10-16 16:34:25.429172",
+ "modified": "2025-12-15 14:57:51.061602",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "WhatsApp Message",
  "owner": "Administrator",
  "permissions": [
@@ -212,7 +212,7 @@
    "write": 1
   }
  ],
- "quick_entry": 1,
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": [],
