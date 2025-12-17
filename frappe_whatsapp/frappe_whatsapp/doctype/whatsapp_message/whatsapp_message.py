@@ -4,6 +4,7 @@ import json
 import frappe
 from frappe.model.document import Document
 from frappe.integrations.utils import make_post_request
+import os
 
 
 class WhatsAppMessage(Document):
@@ -18,16 +19,19 @@ class WhatsAppMessage(Document):
 
     def send_message(self):
         """Send message."""
+        file_name = ext = None
         if self.type == "Outgoing" and self.message_type != "Template":
             if self.attach and not self.attach.startswith("http"):
-                link = frappe.utils.get_url() + "/" + self.attach
+                file_name, ext = os.path.splitext(self.attach)
+                file_name = file_name.split("/")[2]
+                link = frappe.utils.get_url() + "/" + self.attach                
             else:
                 link = self.attach
-
+            
             data = {
                 "messaging_product": "whatsapp",
                 "to": self.format_number(self.to),
-                "type": self.content_type,
+                "type": "document" if ext and ext == ".webm" else self.content_type,
             }
             if self.is_reply and self.reply_to_message_id:
                 data["context"] = {"message_id": self.reply_to_message_id}
@@ -36,6 +40,10 @@ class WhatsAppMessage(Document):
                     "link": link,
                     "caption": self.message,
                 }
+                if self.content_type == "document":
+                    data["document"]["filename"] = file_name
+
+
             elif self.content_type == "reaction":
                 data["reaction"] = {
                     "message_id": self.reply_to_message_id,
@@ -44,8 +52,11 @@ class WhatsAppMessage(Document):
             elif self.content_type == "text":
                 data["text"] = {"preview_url": True, "body": self.message}
 
-            elif self.content_type == "audio":
-                data["text"] = {"link": link}
+            elif self.content_type == "audio":                
+                if ext and ext == ".webm":
+                    data["document"] = {"link": link}
+                else:
+                    data["audio"] = {"link": link}
 
             try:
                 self.notify(data)

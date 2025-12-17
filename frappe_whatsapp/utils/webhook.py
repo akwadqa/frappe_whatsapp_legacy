@@ -90,7 +90,8 @@ def post():
 
 
                 media_id = message[message_type]["id"]
-                file_name = message[message_type]["filename"]
+                file_name = message.get(message_type).get("filename")                
+                
                 headers = {
                     'Authorization': 'Bearer ' + token
 
@@ -101,6 +102,10 @@ def post():
                     media_data = response.json()
                     media_url = media_data.get("url")
                     mime_type = media_data.get("mime_type")
+                    if not file_name:
+                        file_extension = mime_type.split('/')[1]
+                        file_name = f"{frappe.generate_hash(length=10)}.{file_extension}"
+                
 
                     media_response = requests.get(media_url, headers=headers)
                     if media_response.status_code == 200:
