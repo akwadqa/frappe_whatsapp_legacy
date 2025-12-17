@@ -51,9 +51,10 @@ def post():
         None,
     )
 
-
     if messages:
         for message in messages:
+            if frappe.db.exists("WhatsApp Message", {"message_id": message['id']}):
+                return
             message_type = message['type']
             is_reply = True if message.get('context') else False
             reply_to_message_id = message['context']['id'] if is_reply else None
@@ -80,16 +81,6 @@ def post():
                     "content_type": "reaction",
                     "profile_name":sender_profile_name
                 }).insert(ignore_permissions=True)
-            elif message_type == 'interactive':
-                frappe.get_doc({
-                    "doctype": "WhatsApp Message",
-                    "type": "Incoming",
-                    "from": message['from'],
-                    "message": message['interactive']['nfm_reply']['response_json'],
-                    "message_id": message['id'],
-                    "content_type": "flow",
-                    "profile_name":sender_profile_name
-                }).insert(ignore_permissions=True)
             elif message_type in ["image", "sticker", "audio", "video", "document"]:
                 settings = frappe.get_doc(
                             "WhatsApp Settings", "WhatsApp Settings",
@@ -99,6 +90,7 @@ def post():
 
 
                 media_id = message[message_type]["id"]
+                file_name = message[message_type]["filename"]
                 headers = {
                     'Authorization': 'Bearer ' + token
 
@@ -109,13 +101,19 @@ def post():
                     media_data = response.json()
                     media_url = media_data.get("url")
                     mime_type = media_data.get("mime_type")
-                    file_extension = mime_type.split('/')[1]
 
                     media_response = requests.get(media_url, headers=headers)
                     if media_response.status_code == 200:
-
                         file_data = media_response.content
-                        file_name = f"{frappe.generate_hash(length=10)}.{file_extension}"
+
+                        file = frappe.get_doc(
+                            {
+                                "doctype": "File",
+                                "file_name": file_name,
+                                "content": file_data
+                                
+                            }
+                        ).insert(ignore_permissions=True)
 
                         message_doc = frappe.get_doc({
                             "doctype": "WhatsApp Message",
@@ -126,23 +124,10 @@ def post():
                             "is_reply": is_reply,
                             "message": message[message_type].get("caption",f"/files/{file_name}"),
                             "content_type" : message_type,
-                            "profile_name":sender_profile_name
+                            "profile_name":sender_profile_name,
+                            "attach": file.file_url
                         }).insert(ignore_permissions=True)
-
-                        file = frappe.get_doc(
-                            {
-                                "doctype": "File",
-                                "file_name": file_name,
-                                "attached_to_doctype": "WhatsApp Message",
-                                "attached_to_name": message_doc.name,
-                                "content": file_data,
-                                "attached_to_field": "attach"
-                            }
-                        ).save(ignore_permissions=True)
-
-
-                        message_doc.attach = file.file_url
-                        message_doc.save()
+                        
             elif message_type == "button":
                 frappe.get_doc({
                     "doctype": "WhatsApp Message",
