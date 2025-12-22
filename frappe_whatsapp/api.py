@@ -50,7 +50,7 @@ def generate_key(user):
     return f"token {api_key}:{api_secret}"
 # ================================================================================
 @frappe.whitelist()
-def check_in(gate: str, checkin_by: str, qr_code: str = None, invitee_id: str = None):
+def check_in(checkin_by: str, gate: str = None,  qr_code: str = None, invitee_id: str = None):
     """
      Validate QR token (ticket_id) or invitee name and log check-in.
     """
