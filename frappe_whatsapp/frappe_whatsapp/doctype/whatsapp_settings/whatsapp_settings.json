@@ -13,7 +13,8 @@
   "phone_id",
   "business_id",
   "app_id",
-  "webhook_verify_token"
+  "webhook_verify_token",
+  "whatsapp_role"
  ],
  "fields": [
   {
@@ -57,14 +58,22 @@
    "fieldname": "app_id",
    "fieldtype": "Data",
    "label": "App ID"
+  },
+  {
+   "fieldname": "whatsapp_role",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "WhatsApp Role",
+   "options": "Role",
+   "reqd": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-03 12:42:25.851544",
+ "modified": "2025-12-21 16:38:01.967736",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "WhatsApp Settings",
  "owner": "Administrator",
  "permissions": [
@@ -79,6 +88,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []
