@@ -23,6 +23,7 @@
   "conversation_id",
   "content_type",
   "attach",
+  "caption",
   "section_break_iyjf",
   "is_reply",
   "reply_to_message_id",
@@ -188,12 +189,17 @@
    "fieldtype": "Data",
    "label": "Profile Name",
    "read_only": 1
+  },
+  {
+   "fieldname": "caption",
+   "fieldtype": "Data",
+   "label": "Caption"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-22 11:19:29.159556",
+ "modified": "2025-12-22 19:11:31.476231",
  "modified_by": "Administrator",
  "module": "Frappe WhatsApp",
  "name": "WhatsApp Message",

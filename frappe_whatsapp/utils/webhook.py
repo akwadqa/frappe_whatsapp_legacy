@@ -30,6 +30,7 @@ def get():
 def post():
     """Post."""
     data = frappe.local.form_dict
+    frappe.log_error("webhook", frappe.as_json(data))
     frappe.get_doc({
         "doctype": "WhatsApp Notification Log",
         "template": "Webhook",
@@ -90,7 +91,8 @@ def post():
 
 
                 media_id = message[message_type]["id"]
-                file_name = message.get(message_type).get("filename")                
+                file_name = message.get(message_type).get("filename")   
+                caption = message[message_type].get("caption")          
                 
                 headers = {
                     'Authorization': 'Bearer ' + token
@@ -127,10 +129,11 @@ def post():
                             "message_id": message['id'],
                             "reply_to_message_id": reply_to_message_id,
                             "is_reply": is_reply,
-                            "message": message[message_type].get("caption",f"/files/{file_name}"),
+                            "message": f"/files/{file_name}",
                             "content_type" : message_type,
                             "profile_name":sender_profile_name,
-                            "attach": file.file_url
+                            "attach": file.file_url,
+                            "caption": caption
                         }).insert(ignore_permissions=True)
                         
             elif message_type == "button":
@@ -191,6 +194,13 @@ def update_message_status(data):
 
     doc = frappe.get_doc("WhatsApp Message", name)
     doc.status = status
-    if conversation:
-        doc.conversation_id = conversation
-    doc.save(ignore_permissions=True)
+    
+    frappe.db.set_value(
+        "WhatsApp Message",
+        name,
+        {
+            "status": status,
+            "conversation_id": conversation
+        },
+        update_modified=False
+    )
