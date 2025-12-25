@@ -20,6 +20,7 @@
   "message",
   "message_type",
   "message_id",
+  "local_message_id",
   "conversation_id",
   "content_type",
   "attach",
@@ -192,14 +193,19 @@
   },
   {
    "fieldname": "caption",
-   "fieldtype": "Data",
+   "fieldtype": "HTML Editor",
    "label": "Caption"
+  },
+  {
+   "fieldname": "local_message_id",
+   "fieldtype": "Data",
+   "label": "Local Message ID"
   }
  ],
  "in_create": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-22 19:11:31.476231",
+ "modified": "2025-12-25 11:50:16.415047",
  "modified_by": "Administrator",
  "module": "Frappe WhatsApp",
  "name": "WhatsApp Message",

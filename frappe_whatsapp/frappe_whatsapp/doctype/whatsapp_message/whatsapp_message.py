@@ -148,6 +148,16 @@ class WhatsAppMessage(Document):
                 data=json.dumps(data),
             )
             self.db_set("message_id", response["messages"][0]["id"])
+            frappe.publish_realtime(
+            self.to,
+                {
+                    "type": self.type,
+                    "message_id": self.message_id,
+                    "local_message_id": self.local_message_id,
+                    "content": self.message or self.attach,
+                    "caption": self.caption,
+                }
+            )
 
         except Exception as e:
             res = frappe.flags.integration_request.json()["error"]
