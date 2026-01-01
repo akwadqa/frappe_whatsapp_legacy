@@ -201,30 +201,38 @@ def update_template_status(data):
     )
 
 def update_message_status(data):
-    """Update message status."""
-    id = data['statuses'][0]['id']
-    status = data['statuses'][0]['status']
-    conversation = data['statuses'][0].get('conversation', {}).get('id')
-    name = frappe.db.get_value("WhatsApp Message", filters={"message_id": id})
+    try:
+        """Update message status."""
+        id = data['statuses'][0]['id']
+        status = data['statuses'][0]['status']
+        conversation = data['statuses'][0].get('conversation', {}).get('id')
+        name = frappe.db.get_value("WhatsApp Message", filters={"message_id": id})
 
-    doc = frappe.get_doc("WhatsApp Message", name)
-    doc.status = status
-    
-    # Update Occasion Invitee RSVP status
-    if doc.occasion_invitee and frappe.db.exists("Occasion Invitee", doc.occasion_invitee):
-        occ_inv_doc = frappe.get_doc("Occasion Invitee", doc.occasion_invitee)
-        if occ_inv_doc.rsvp_status in ["Not Sent", "Failed"] and not occ_inv_doc.ticket_id:
-            if status == "sent":
-                occ_inv_doc.rsvp_status = "Pending"
-            elif status == "failed":
-                occ_inv_doc.rsvp_status = "Failed"
+        doc = frappe.get_doc("WhatsApp Message", name)
+        doc.status = status
 
-            occ_inv_doc.save(ignore_permissions=True)           
-                    
-    if conversation:
-        doc.conversation_id = conversation
-    doc.save(ignore_permissions=True)
-    frappe.db.commit()
+        if doc.occasion_invitee and frappe.db.exists("Occasion Invitee", doc.occasion_invitee):
+            occ_inv_doc = frappe.get_doc("Occasion Invitee", doc.occasion_invitee)
+
+            if occ_inv_doc.rsvp_status not in ["Confirmed", "Declined"] and not (occ_inv_doc.replied or 0):
+
+                if status in ["sent"]:
+                    if occ_inv_doc.rsvp_status == "Not Sent":
+                        occ_inv_doc.rsvp_status = "Pending"
+
+                elif status == "failed":
+                    if occ_inv_doc.rsvp_status in ["Not Sent", "Pending"]:
+                        occ_inv_doc.rsvp_status = "Failed"
+
+                occ_inv_doc.save(ignore_permissions=True)
+
+        if conversation:
+            doc.conversation_id = conversation
+        doc.save(ignore_permissions=True)
+        frappe.db.commit()
+    except Exception as e:
+        frappe.log_error("error in updating message status", e)    
+
 
 def update_invitee_rsvp_status(message_id, reply):
     """Update RSVP status of an Occasion Invitee based on WhatsApp reply."""    
@@ -248,19 +256,28 @@ def update_invitee_rsvp_status(message_id, reply):
                 message=f"No invitee found for message_id={message_id}"
             )
             return
-
+        #mapping to allow translation and different templates by senad
         status_map = {
             "تأكيد": "Confirmed",
             "اعتذار": "Declined",
-            "موقع المناسبة": "Location"
+            "موقع المناسبة": "Location",
+            "Confirm": "Confirmed",
+            "Decline": "Declined",
+            "Confirmed": "Confirmed",
+            "Declined": "Declined",
+            "Location": "Location",
         }
-        new_status = status_map.get(reply)
-        if not new_status:
+        reply_r = status_map.get(reply)
+        allowed = {"Confirmed", "Declined", "Location"}
+        new_status = reply_r.strip() if reply_r else None
+
+        if new_status not in allowed:
             frappe.log_error(
                 title="Unrecognized reply",
                 message=f"Unrecognized reply: {reply}"
             )
             return
+
 
         doc = frappe.get_doc("Occasion Invitee", occasion_invitee)
         doc.rsvp_status = new_status if new_status in ["Confirmed" , "Declined"] else doc.rsvp_status
@@ -273,63 +290,111 @@ def update_invitee_rsvp_status(message_id, reply):
         doc.save(ignore_permissions=True)
         frappe.db.commit()
 
-        # Handle sending response messages
-        def send_whatsapp_message(template, extra_fields=None):
-            """Helper to create outgoing WhatsApp message"""
-            message_data = {
+
+        settings = frappe.get_doc("WhatsApp Settings", "WhatsApp Settings")
+        #Language changes by Senad
+        language=frappe.db.get_value("Occasion", doc.occasion, "language")
+        if language=="Arabic":
+            confirm_text = (settings.get("confirm_reply_ar") or "").strip()
+            decline_text = (settings.get("decline_reply_ar") or "").strip()
+        elif language=="English":
+            confirm_text = (settings.get("confirm_reply_en") or "").strip()
+            decline_text = (settings.get("decline_reply_en") or "").strip()
+        
+        # if not confirm_text:
+        #     confirm_text = "✅ Confirmed"
+        # if not decline_text:
+        #     decline_text = "❌ Declined"
+
+        def send_text_message(text):
+            frappe.get_doc({
                 "doctype": "WhatsApp Message",
                 "type": "Outgoing",
                 "to": doc.whatsapp_number,
                 "occasion_invitee": doc.name,
-                "message_type": "Template",
-                "use_template": 1,
-                "template": template,
+                "content_type": "text",
+                "message_type": "Manual",
+                "message": text,
                 "reference_doctype": "Occasion Invitee",
                 "reference_name": doc.name
-            }
-            if extra_fields:
-                message_data.update(extra_fields)
-            frappe.get_doc(message_data).insert(ignore_permissions=True)
+            }).insert(ignore_permissions=True)
+
+        def send_qr_image(image_url):
+            frappe.get_doc({
+                "doctype": "WhatsApp Message",
+                "type": "Outgoing",
+                "to": doc.whatsapp_number,
+                "occasion_invitee": doc.name,
+                "content_type": "image",
+                "message_type": "Manual",
+                "attach": image_url,
+                "message": text,
+                "reference_doctype": "Occasion Invitee",
+                "reference_name": doc.name
+            }).insert(ignore_permissions=True)
+
 
         if new_status == "Confirmed":
-            confirmed_template = frappe.db.get_value("Occasion", doc.occasion, "confirmed_template")
-            if confirmed_template:
-                if doc.qr_raw_data:
-                    # Upload QR code to WABA and send with media_id
-                    doc.media_id = upload_base64_png_to_waba(doc.qr_raw_data)
-                    send_whatsapp_message(confirmed_template, {
-                        "content_type": "image",
-                        "media_id": doc.media_id,
-                    })
-                else:
-                    # Send template without image
-                    send_whatsapp_message(confirmed_template)
+            try:
+            except Exception as e:
+                frappe.log_error("error in send confirm message", e)
+                
+                
+            if doc.qr_raw_data:
+                try:
+                    png_bytes = normalize_png(doc.qr_raw_data)
 
-                doc.replied = 1
-                doc.save(ignore_permissions=True)
-                frappe.db.commit()
+                    file_name = f"qr_{doc.name}_{frappe.generate_hash(length=6)}.png"
+                    file_doc = frappe.get_doc({
+                        "doctype": "File",
+                        "file_name": file_name,
+                        "is_private": 0,
+                        "content": png_bytes,
+                    }).insert(ignore_permissions=True)
+
+                    public_url = frappe.utils.get_url(file_doc.file_url)
+
+                    send_qr_image(public_url)
+                    frappe.db.commit()
+
+                except Exception as e:
+                    frappe.log_error("error in sending qr image", str(e))
+
 
         elif new_status == "Declined":
-            declined_template = frappe.db.get_value("Occasion", doc.occasion, "declined_template")
-            if declined_template:
-                send_whatsapp_message(declined_template)
+            try:
+                send_text_message(decline_text)
                 doc.replied = 1
                 doc.save(ignore_permissions=True)
                 frappe.db.commit()
+            except Exception as e:
+                frappe.log_error("error in sending decline message", e)    
+
+
+
         elif new_status == "Location":
-            map_link = frappe.db.get_value("Occasion", doc.occasion, "map_link")
             location_name = frappe.db.get_value("Occasion", doc.occasion, "location_name")
             location_address = frappe.db.get_value("Occasion", doc.occasion, "location_address")
-            info = extract_google_maps_info(map_link)
-            if info.get("latitude") and info.get("longitude"):
+
+            lat = frappe.db.get_value("Occasion", doc.occasion, "map_latitude")
+            lng = frappe.db.get_value("Occasion", doc.occasion, "map_longitude")
+
+            if lat is None or lng is None:
+                frappe.log_error(
+                    title="Missing Location Coordinates",
+                    message=f"Occasion {doc.occasion} is missing map_latitude/map_longitude"
+                )
+                return
+
+            try:
                 message_data = {
                     "doctype": "WhatsApp Message",
                     "type": "Outgoing",
                     "to": doc.whatsapp_number,
                     "occasion_invitee": doc.name,
                     "content_type": "location",
-                    "latitude": info.get("latitude"),
-                    "longitude": info.get("longitude"),
+                    "latitude": float(lat),
+                    "longitude": float(lng),
                     "location_name": location_name,
                     "location_address": location_address,
                     "reference_doctype": "Occasion",
@@ -337,12 +402,11 @@ def update_invitee_rsvp_status(message_id, reply):
                 }
                 frappe.get_doc(message_data).insert(ignore_permissions=True)
                 frappe.db.commit()
-            else:
-                frappe.log_error(
-                title="Missing Location Info",
-                message=f"Missing location info for Occasion {doc.occasion}"
-            )
+            except Exception as e:
+                frappe.log_error("send location error", str(e))
+
             return
+
     except Exception as e:
         frappe.db.rollback()
         frappe.log_error(

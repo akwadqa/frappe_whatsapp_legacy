@@ -13,7 +13,13 @@
   "phone_id",
   "business_id",
   "app_id",
-  "webhook_verify_token"
+  "webhook_verify_token",
+  "replies_section",
+  "confirm_reply_ar",
+  "decline_reply_ar",
+  "column_break_slqw",
+  "confirm_reply_en",
+  "decline_reply_en"
  ],
  "fields": [
   {
@@ -57,14 +63,43 @@
    "fieldname": "app_id",
    "fieldtype": "Data",
    "label": "App ID"
+  },
+  {
+   "fieldname": "replies_section",
+   "fieldtype": "Section Break",
+   "label": "Replies"
+  },
+  {
+   "fieldname": "confirm_reply_ar",
+   "fieldtype": "Small Text",
+   "label": "Confirm Reply AR"
+  },
+  {
+   "fieldname": "decline_reply_ar",
+   "fieldtype": "Small Text",
+   "label": "Decline Reply AR"
+  },
+  {
+   "fieldname": "column_break_slqw",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "confirm_reply_en",
+   "fieldtype": "Small Text",
+   "label": "Confirm Reply EN"
+  },
+  {
+   "fieldname": "decline_reply_en",
+   "fieldtype": "Small Text",
+   "label": "Decline Reply EN"
   }
  ],
  "index_web_pages_for_search": 1,
  "issingle": 1,
  "links": [],
- "modified": "2024-05-03 12:42:25.851544",
+ "modified": "2025-12-30 09:13:39.131317",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "WhatsApp Settings",
  "owner": "Administrator",
  "permissions": [
@@ -79,6 +114,7 @@
    "write": 1
   }
  ],
+ "row_format": "Dynamic",
  "sort_field": "modified",
  "sort_order": "DESC",
  "states": []

@@ -96,8 +96,7 @@
    "in_list_view": 1,
    "in_standard_filter": 1,
    "label": "Status",
-   "no_copy": 1,
-   "read_only": 1
+   "no_copy": 1
   },
   {
    "fieldname": "header_type",
@@ -154,9 +153,9 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-28 08:41:08.959676",
+ "modified": "2025-12-25 12:51:52.992979",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "WhatsApp Templates",
  "naming_rule": "Expression",
  "owner": "Administrator",
