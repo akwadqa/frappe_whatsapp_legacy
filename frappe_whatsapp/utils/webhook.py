@@ -1,4 +1,3 @@
-"""Webhook."""
 import frappe
 import json
 import requests
@@ -9,6 +8,7 @@ import base64, io, json, requests
 from PIL import Image
 import re
 from urllib.parse import unquote, urlparse
+from frappe_whatsapp.utils.template_generator import generate_qr_card
 
 
 @frappe.whitelist(allow_guest=True)
@@ -336,31 +336,41 @@ def update_invitee_rsvp_status(message_id, reply):
 
         if new_status == "Confirmed":
             try:
-            except Exception as e:
-                frappe.log_error("error in send confirm message", e)
-                
-                
-            if doc.qr_raw_data:
-                try:
-                    png_bytes = normalize_png(doc.qr_raw_data)
+                if doc.qr_raw_data:
+                    # Upload image template to WABA and send with media_id
+                    context = {
+                        "title": "Personal access card",
+                        "subtitle": "Please show code to enter",
+                        "subtitle_ar": "يرجى إبراز الكود للدخول",
+                        "qr_image_url": doc.qr_raw_data,
+                        "brand_en": "KROOT",
+                        "brand_ar": "كروت",
+                        "guest_count": doc.party_size,
+                        "website": "www.kroot.com",
+                    }
+                    
+                    base64_image_tmp = generate_qr_card("frappe_whatsapp/templates/QR_Code_template_Kroot.html", context)
+                    doc.media_id = upload_base64_png_to_waba(base64_image_tmp)
+                    doc.replied = 1
+                    doc.save(ignore_permissions=True)
 
-                    file_name = f"qr_{doc.name}_{frappe.generate_hash(length=6)}.png"
-                    file_doc = frappe.get_doc({
-                        "doctype": "File",
-                        "file_name": file_name,
-                        "is_private": 0,
-                        "content": png_bytes,
+                    frappe.get_doc( {
+                        "doctype": "WhatsApp Message",
+                        "type": "Outgoing",
+                        "to": doc.whatsapp_number,
+                        "occasion_invitee": doc.name,
+                        "message_type": "Manual",
+                        "reference_doctype": "Occasion Invitee",
+                        "reference_name": doc.name,
+                        "content_type": "image",
+                        "media_id": doc.media_id
                     }).insert(ignore_permissions=True)
-
-                    public_url = frappe.utils.get_url(file_doc.file_url)
-
-                    send_qr_image(public_url)
                     frappe.db.commit()
 
-                except Exception as e:
-                    frappe.log_error("error in sending qr image", str(e))
+            except Exception as e:
+                frappe.log_error("error in sending qr image", str(e))
 
-
+        
         elif new_status == "Declined":
             try:
                 send_text_message(decline_text)

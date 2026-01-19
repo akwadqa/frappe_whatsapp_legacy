@@ -32,9 +32,13 @@ class WhatsAppMessage(Document):
                 data["context"] = {"message_id": self.reply_to_message_id}
             if self.content_type in ["document", "image", "video"]:
                 data[self.content_type.lower()] = {
-                    "link": link,
                     "caption": self.message,
                 }
+
+                if link:
+                    data[self.content_type.lower()] = {"link": link, "caption": self.message}
+                else:
+                    data[self.content_type.lower()] = {"id": self.media_id}
             elif self.content_type == "reaction":
                 data["reaction"] = {
                     "message_id": self.reply_to_message_id,
