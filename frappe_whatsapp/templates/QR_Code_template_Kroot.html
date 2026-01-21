@@ -3,8 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <title>Personal Access Card</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;500;600&display=swap" rel="stylesheet">
+
+
 
 <style>
+
+.ar-text {
+    direction: rtl;
+    unicode-bidi: isolate;
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+}
+
 body {
     margin: 0;
     min-height: 100vh;
@@ -76,7 +86,6 @@ body {
 }
 
 .brand-ar {
-    font-family: "Noto Sans Arabic", sans-serif;
     /* font-size: 32px; */
     font-weight: bold;
 }
@@ -89,11 +98,11 @@ body {
     <div class="card">
 
         <div class="header">
-            <div ><span class="brand">{{ brand_en }} </span> <span class="brand-ar" dir="rtl"> {{ brand_ar }}</span></div>
+            <div ><span class="brand">{{ brand_en }} </span> <span class="ar-text brand-ar"> {{ brand_ar }}</span></div>
         </div>
 
         <div class="content">
-            <p class="rtl"><strong>{{ subtitle_ar }}</strong></p>
+            <p class="ar-text"><strong>{{ subtitle_ar }}</strong></p>
             <p><strong>{{ subtitle }}</strong></p>
 
             <div class="qr-box">
