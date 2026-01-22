@@ -201,37 +201,50 @@ def update_template_status(data):
     )
 
 def update_message_status(data):
+    """Update message status + sync Occasion Invitee RSVP status."""
     try:
-        """Update message status."""
-        id = data['statuses'][0]['id']
-        status = data['statuses'][0]['status']
-        conversation = data['statuses'][0].get('conversation', {}).get('id')
-        name = frappe.db.get_value("WhatsApp Message", filters={"message_id": id})
+        statuses = (data or {}).get("statuses") or []
+        if not statuses:
+            return
 
-        doc = frappe.get_doc("WhatsApp Message", name)
-        doc.status = status
+        st = statuses[0] or {}
+        msg_id = st.get("id")
+        status = (st.get("status") or "").lower()
+        conversation = (st.get("conversation") or {}).get("id")
 
-        if doc.occasion_invitee and frappe.db.exists("Occasion Invitee", doc.occasion_invitee):
-            occ_inv_doc = frappe.get_doc("Occasion Invitee", doc.occasion_invitee)
+        if not msg_id or not status:
+            return
 
-            if occ_inv_doc.rsvp_status not in ["Confirmed", "Declined"] and not (occ_inv_doc.replied or 0):
+        name = frappe.db.get_value("WhatsApp Message", {"message_id": msg_id}, "name")
+        if not name:
+            return
 
-                if status in ["sent"]:
-                    if occ_inv_doc.rsvp_status == "Not Sent":
-                        occ_inv_doc.rsvp_status = "Pending"
-
-                elif status == "failed":
-                    if occ_inv_doc.rsvp_status in ["Not Sent", "Pending"]:
-                        occ_inv_doc.rsvp_status = "Failed"
-
-                occ_inv_doc.save(ignore_permissions=True)
-
+        msg_doc = frappe.get_doc("WhatsApp Message", name)
+        msg_doc.status = status
         if conversation:
-            doc.conversation_id = conversation
-        doc.save(ignore_permissions=True)
+            msg_doc.conversation_id = conversation
+        msg_doc.save(ignore_permissions=True)
+
+        SUCCESS_STATES = {"sent", "delivered", "read"}
+        FAIL_STATES = {"failed", "undelivered"}
+
+        if msg_doc.occasion_invitee and frappe.db.exists("Occasion Invitee", msg_doc.occasion_invitee):
+            inv = frappe.get_doc("Occasion Invitee", msg_doc.occasion_invitee)
+
+            if inv.rsvp_status not in ["Confirmed", "Declined"] and not (inv.replied or 0):
+
+                if status in SUCCESS_STATES:
+                    if inv.rsvp_status in ["Not Sent", "Failed"]:
+                        inv.db_set("rsvp_status", "Pending", update_modified=False)
+
+                elif status in FAIL_STATES:
+                    if inv.rsvp_status in ["Not Sent", "Pending"]:
+                        inv.db_set("rsvp_status", "Failed", update_modified=False)
+
         frappe.db.commit()
-    except Exception as e:
-        frappe.log_error("error in updating message status", e)    
+
+    except Exception:
+        frappe.log_error("error in updating message status", frappe.get_traceback())
 
 
 def update_invitee_rsvp_status(message_id, reply):
