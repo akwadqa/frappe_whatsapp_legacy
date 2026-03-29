@@ -19,6 +19,12 @@ def run_notifications(self, method):
             def _get_notifications():
                 """returns enabled notifications for the current doctype"""
 
+                if not frappe.db.exists("DocType", self.doctype):
+                    return []
+                
+                if not frappe.db.exists("DocType", "WhatsApp Notification"):
+                    return []
+
                 return frappe.get_all(
                     "WhatsApp Notification",
                     fields=["name", "doctype_event"],
