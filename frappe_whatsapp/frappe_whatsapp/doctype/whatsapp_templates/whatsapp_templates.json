@@ -132,9 +132,9 @@
   },
   {
    "fieldname": "for_doctype",
-   "fieldtype": "Link",
+   "fieldtype": "Select",
    "label": "For DocType",
-   "options": "DocType"
+   "options": "Occasion\nOccasion Invitee"
   },
   {
    "fieldname": "section_break_lupb",
@@ -153,11 +153,11 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-12-25 12:51:52.992979",
+ "modified": "2026-04-08 13:56:11.001666",
  "modified_by": "Administrator",
  "module": "Frappe WhatsApp",
  "name": "WhatsApp Templates",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {

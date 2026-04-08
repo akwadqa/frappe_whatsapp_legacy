@@ -276,8 +276,6 @@ def update_invitee_rsvp_status(message_id, reply):
             "موقع المناسبة": "Location",
             "Confirm": "Confirmed",
             "Decline": "Declined",
-            "Confirmed": "Confirmed",
-            "Declined": "Declined",
             "Location": "Location",
         }
         reply_r = status_map.get(reply)
