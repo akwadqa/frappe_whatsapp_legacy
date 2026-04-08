@@ -24,6 +24,7 @@
   "content_type",
   "attach",
   "media_id",
+  "occasion",
   "occasion_invitee",
   "section_break_iyjf",
   "is_reply",
@@ -255,13 +256,20 @@
    "fieldname": "reaction_emoji",
    "fieldtype": "Data",
    "label": "Reaction Emoji"
+  },
+  {
+   "fieldname": "occasion",
+   "fieldtype": "Link",
+   "label": "Occasion",
+   "options": "Occasion",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-09-21 14:51:26.516600",
+ "modified": "2026-04-08 14:01:55.787820",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "WhatsApp Message",
  "owner": "Administrator",
  "permissions": [

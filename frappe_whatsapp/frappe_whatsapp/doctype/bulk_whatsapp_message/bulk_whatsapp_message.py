@@ -90,9 +90,12 @@ class BulkWhatsAppMessage(Document):
         # wa_message.from_number = self.from_number
         wa_message.to = recipient.get("mobile_number")
         wa_message.message_type = "Text"
+        
+        wa_message.occasion = self.occasion
         wa_message.occasion_invitee = recipient.get("occasion_invitee")
-        wa_message.reference_doctype = "Occasion Invitee"
-        wa_message.reference_name = recipient.get("occasion_invitee")
+        
+        wa_message.reference_doctype = frappe.get_value("WhatsApp Templates", self.template, "for_doctype")
+        wa_message.reference_name = self.occasion if wa_message.reference_doctype == "Occasion" else recipient.get("occasion_invitee")
         # wa_message.message = message_content
         wa_message.flags.custom_ref_doc = json.loads(recipient.get("recipient_data", "{}"))
         wa_message.bulk_message_reference = self.name

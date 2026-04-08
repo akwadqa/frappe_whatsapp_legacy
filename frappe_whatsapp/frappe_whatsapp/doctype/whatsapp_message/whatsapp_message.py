@@ -133,10 +133,14 @@ class WhatsAppMessage(Document):
                     }]
                 })
                 else:
-                    if template.sample.startswith("http"):
+                    occasion_image = frappe.get_value("Occasion", self.occasion, "image")   
+                    if occasion_image:
+                        url = f'{frappe.utils.get_url()}/{occasion_image}'
+                    elif template.sample.startswith("http"):
                         url = f'{template.sample}'
                     else:
                         url = f'{frappe.utils.get_url()}{template.sample}'
+                    
                     data['template']['components'].append({
                         "type": "header",
                         "parameters": [{
