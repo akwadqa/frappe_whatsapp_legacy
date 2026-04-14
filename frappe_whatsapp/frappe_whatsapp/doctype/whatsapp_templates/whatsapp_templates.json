@@ -32,6 +32,7 @@
   {
    "fieldname": "template_name",
    "fieldtype": "Data",
+   "in_list_view": 1,
    "label": "Template Label",
    "reqd": 1,
    "unique": 1
@@ -153,7 +154,7 @@
  ],
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-04-08 13:56:11.001666",
+ "modified": "2026-04-13 16:46:25.165059",
  "modified_by": "Administrator",
  "module": "Frappe WhatsApp",
  "name": "WhatsApp Templates",

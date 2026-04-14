@@ -120,6 +120,10 @@ class WhatsAppTemplates(Document):
 
     def update_template(self):
         """Update template to meta."""
+        
+        if self.has_value_changed("template_name"):
+            return
+        
         self.get_settings()
         data = {"components": []}
 
