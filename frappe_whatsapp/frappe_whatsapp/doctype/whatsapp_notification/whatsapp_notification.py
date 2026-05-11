@@ -149,7 +149,6 @@ class WhatsAppNotification(Document):
                         if isinstance(value, (datetime.date, datetime.datetime)):
                             value = str(value)
 
-                    frappe.log_error(title="parameter value", message=str(value))
                     parameters.append({
                         "type": "text",
                         "text": value or ""
@@ -354,7 +353,7 @@ def call_trigger_notifications():
         trigger_notifications()  
     except Exception as e:
         # Log the error but do not show any popup or alert
-        frappe.log_error(frappe.get_traceback(), "Error in call_trigger_notifications")
+        frappe.log_error("Error in call_trigger_notifications", frappe.get_traceback())
         # Optionally, you could raise the exception to be handled elsewhere if needed
         raise e
 

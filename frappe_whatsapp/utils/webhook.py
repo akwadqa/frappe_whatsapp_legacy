@@ -30,7 +30,6 @@ def get():
 def post():
     """Post."""
     data = frappe.local.form_dict
-    frappe.log_error("webhook", frappe.as_json(data))
     frappe.get_doc({
         "doctype": "WhatsApp Notification Log",
         "template": "Webhook",
