@@ -112,7 +112,7 @@ def get_customers_for_import(recipients_type, days_since_last_order=None, regist
                 FROM `tabSales Order`
                 WHERE docstatus = 1
                     AND akd_udhiyah = 1
-                    AND akd_mubadara = 0
+                    AND akd_mubadara = 1
                     AND customer IS NOT NULL
             """)]
 
