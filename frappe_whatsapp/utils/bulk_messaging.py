@@ -106,15 +106,15 @@ def get_customers_for_import(recipients_type, days_since_last_order=None, regist
                 fields=["name"]
             )]
         
-        elif recipients_type == "Customers With Previous Udhiya Orders":
+        elif recipients_type == "Udhiya Customers & Active Customer (60 Days)":
+            cutoff_date = add_days(nowdate(), -60)
             customers = [r[0] for r in frappe.db.sql("""
-                SELECT DISTINCT customer
-                FROM `tabSales Order`
-                WHERE docstatus = 1
-                    AND akd_udhiyah = 1
-                    AND akd_mubadara = 1
-                    AND customer IS NOT NULL
-            """)]
+                SELECT DISTINCT customer FROM `tabSales Order`
+                WHERE docstatus = 1 AND akd_udhiyah = 1 AND akd_mubadara = 1 AND customer IS NOT NULL
+                UNION
+                SELECT DISTINCT customer FROM `tabSales Order`
+                WHERE docstatus = 1 AND transaction_date >= %(cutoff_date)s AND customer IS NOT NULL
+            """, {"cutoff_date": cutoff_date})]
 
         if not customers:
             return []
