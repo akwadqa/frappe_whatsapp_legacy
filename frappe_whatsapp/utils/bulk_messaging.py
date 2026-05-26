@@ -105,6 +105,14 @@ def get_customers_for_import(recipients_type, days_since_last_order=None, regist
                 filters=[["Customer", "creation", ">=", cutoff_date]],
                 fields=["name"]
             )]
+        # 4- All Customers
+        elif recipients_type == "All Customers":
+            customers = [r.name for r in frappe.get_all(
+                "Customer",
+                filters={"disabled": 0},
+                fields=["name"]
+            )]
+
         
         elif recipients_type == "Udhiya Customers & Active Customer (60 Days)":
             cutoff_date = add_days(nowdate(), -60)

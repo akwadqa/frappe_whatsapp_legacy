@@ -142,7 +142,7 @@
    "fieldname": "select_recipients_type",
    "fieldtype": "Select",
    "label": "Select Recipients Type",
-   "options": "Inactive Customers\nRecently Registered Customers\nCustomers Without Transactions\nCustomers With Previous Udhiya Orders\nUdhiya Customers & Active Customer (60 Days)"
+   "options": "Inactive Customers\nRecently Registered Customers\nCustomers Without Transactions\nCustomers With Previous Udhiya Orders\nUdhiya Customers & Active Customer (60 Days)\nAll Customers"
   },
   {
    "depends_on": "eval: doc.select_recipients_type == \"Inactive Customers\" && doc.import_recipients",
@@ -177,7 +177,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-24 14:26:00.797942",
+ "modified": "2026-05-27 01:29:18.033481",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "WhatsApp Recipient List",
