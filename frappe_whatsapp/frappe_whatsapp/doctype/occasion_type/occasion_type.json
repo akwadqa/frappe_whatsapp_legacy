@@ -6,7 +6,9 @@
  "doctype": "DocType",
  "engine": "InnoDB",
  "field_order": [
-  "occasion_type"
+  "occasion_type",
+  "image",
+  "color"
  ],
  "fields": [
   {
@@ -14,14 +16,24 @@
    "fieldtype": "Data",
    "label": "Occasion Type",
    "unique": 1
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach",
+   "label": "Image"
+  },
+  {
+   "fieldname": "color",
+   "fieldtype": "Color",
+   "label": "Color"
   }
  ],
  "grid_page_length": 50,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2025-08-19 13:05:08.818233",
+ "modified": "2026-06-11 15:46:48.511704",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "Occasion Type",
  "naming_rule": "By fieldname",
  "owner": "Administrator",
