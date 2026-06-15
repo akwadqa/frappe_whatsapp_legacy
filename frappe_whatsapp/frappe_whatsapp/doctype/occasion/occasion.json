@@ -11,6 +11,11 @@
   "title",
   "timeline_section",
   "from",
+  "date",
+  "time",
+  "latitude",
+  "longitude",
+  "image",
   "column_break_ewkq",
   "to",
   "location_section",
@@ -143,6 +148,31 @@
    "fieldname": "location_address",
    "fieldtype": "Data",
    "label": "Location Address"
+  },
+  {
+   "fieldname": "date",
+   "fieldtype": "Date",
+   "label": "Date"
+  },
+  {
+   "fieldname": "time",
+   "fieldtype": "Time",
+   "label": "Time"
+  },
+  {
+   "fieldname": "latitude",
+   "fieldtype": "Data",
+   "label": "latitude"
+  },
+  {
+   "fieldname": "longitude",
+   "fieldtype": "Data",
+   "label": "longitude"
+  },
+  {
+   "fieldname": "image",
+   "fieldtype": "Attach",
+   "label": "Image"
   }
  ],
  "grid_page_length": 50,
@@ -174,11 +204,11 @@
    "link_fieldname": "occasion"
   }
  ],
- "modified": "2025-08-31 13:54:31.350606",
+ "modified": "2026-06-03 11:18:14.581488",
  "modified_by": "Administrator",
- "module": "Frappe Whatsapp",
+ "module": "Frappe WhatsApp",
  "name": "Occasion",
- "naming_rule": "Expression",
+ "naming_rule": "Expression (old style)",
  "owner": "Administrator",
  "permissions": [
   {
