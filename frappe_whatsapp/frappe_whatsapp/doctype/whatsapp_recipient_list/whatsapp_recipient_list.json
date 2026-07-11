@@ -51,47 +51,39 @@
    "fieldname": "recipients",
    "fieldtype": "Table",
    "label": "Recipients",
-   "options": "WhatsApp Recipient",
-   "reqd": 1
+   "options": "WhatsApp Recipient"
   },
   {
    "fieldname": "import_section",
    "fieldtype": "Section Break",
-   "hidden": 1,
    "label": "Import Recipients"
   },
   {
    "default": "0",
    "fieldname": "import_from_doctype",
    "fieldtype": "Check",
-   "label": "Import From Customer DocType"
+   "label": "Import From DocType"
   },
   {
-   "default": "Customer",
    "depends_on": "eval:doc.import_from_doctype==1",
    "fieldname": "doctype_to_import",
    "fieldtype": "Link",
-   "hidden": 1,
    "label": "DocType to Import",
    "options": "DocType"
   },
   {
-   "default": "custom_mobile_no",
    "depends_on": "eval:doc.import_from_doctype==1",
    "description": "Field name containing the mobile number",
    "fieldname": "mobile_field",
    "fieldtype": "Data",
-   "hidden": 1,
    "label": "Mobile Number Field"
   },
   {
-   "default": "customer_name",
    "depends_on": "eval:doc.import_from_doctype==1",
    "description": "Field name containing the recipient name (optional)",
    "fieldname": "name_field",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Customer Name Field"
+   "label": "Name Field"
   },
   {
    "depends_on": "eval:doc.import_from_doctype==1",
@@ -125,12 +117,10 @@
    "options": "JSON"
   },
   {
-   "default": "name",
    "depends_on": "eval:doc.import_from_doctype==1",
    "fieldname": "customer_id_field",
    "fieldtype": "Data",
-   "hidden": 1,
-   "label": "Customer ID Field"
+   "label": "ID Field"
   },
   {
    "fieldname": "import_recipients_section",
@@ -177,7 +167,7 @@
  "hide_toolbar": 1,
  "index_web_pages_for_search": 1,
  "links": [],
- "modified": "2026-05-27 01:29:18.033481",
+ "modified": "2026-07-09 14:16:40.751606",
  "modified_by": "Administrator",
  "module": "Frappe Whatsapp",
  "name": "WhatsApp Recipient List",

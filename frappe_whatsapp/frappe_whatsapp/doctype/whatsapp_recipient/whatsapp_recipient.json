@@ -12,12 +12,10 @@
  ],
  "fields": [
   {
-   "fetch_from": "customer.custom_mobile_no",
    "fieldname": "mobile_number",
    "fieldtype": "Data",
    "in_list_view": 1,
    "label": "Mobile Number",
-   "read_only": 1,
    "reqd": 1
   },
   {
