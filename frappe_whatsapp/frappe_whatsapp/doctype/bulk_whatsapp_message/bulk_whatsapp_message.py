@@ -9,7 +9,7 @@ from frappe.utils import cint
 from frappe.model.document import Document
 from frappe.model.naming import make_autoname
 
-BATCH_SIZE = 200
+BATCH_SIZE = 500
 THROTTLE_DELAY = 0.03  # 30ms
 
 
